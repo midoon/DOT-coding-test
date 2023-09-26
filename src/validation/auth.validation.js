@@ -10,6 +10,16 @@ const registerUserValidation = (payload) => {
   return schema.validate(payload, { abortEarly: false });
 };
 
+const loginUserValidation = (payload) => {
+  const schema = Joi.object({
+    email: Joi.string().max(255).email().required(),
+    password: Joi.string().max(255).min(8).required(),
+  });
+
+  return schema.validate(payload, { abortEarly: false });
+};
+
 module.exports = {
   registerUserValidation,
+  loginUserValidation,
 };
