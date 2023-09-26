@@ -33,7 +33,7 @@ const register = async (req, res) => {
     return res.status(201).json({
       status: true,
       status_code: 201,
-      message: "Success Registration",
+      message: "Success registration",
       data: { userRegistered },
     });
   } catch (error) {
