@@ -72,6 +72,7 @@ const login = async (req, res) => {
       status_code: 201,
       message: "Success login",
       data: {
+        user_id: logedUser.user_id,
         access_token: accessToken,
         refresh_token: refresh_token,
       },
