@@ -34,7 +34,10 @@ const register = async (req, res) => {
       status: true,
       status_code: 201,
       message: "Success registration",
-      data: { userRegistered },
+      data: {
+        user_id: userRegistered.user_id,
+        username: userRegistered.username,
+      },
     });
   } catch (error) {
     console.log(error);
