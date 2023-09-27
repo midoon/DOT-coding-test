@@ -4,6 +4,7 @@ const login = require("./auth-service/login");
 const isTokenExistbyUserId = require("./auth-service/isTokenExistByUserId");
 const deleteRefreshToken = require("./auth-service/deleteRefreshToken");
 const createRefreshToken = require("./auth-service/createRefreshToken");
+const isTokenExistbyToken = require("./auth-service/isTokenExistByToken");
 
 module.exports = {
   register,
@@ -12,4 +13,5 @@ module.exports = {
   isTokenExistbyUserId,
   deleteRefreshToken,
   createRefreshToken,
+  isTokenExistbyToken,
 };

@@ -19,7 +19,15 @@ const loginUserValidation = (payload) => {
   return schema.validate(payload, { abortEarly: false });
 };
 
+const refreshTokenValidation = (payload) => {
+  const schema = Joi.object({
+    refresh_token: Joi.string().required(),
+  });
+  return schema.validate(payload, { abortEarly: false });
+};
+
 module.exports = {
   registerUserValidation,
   loginUserValidation,
+  refreshTokenValidation,
 };
