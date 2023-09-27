@@ -18,7 +18,18 @@ const createTestUser = async () => {
       user_id: "id-test-1",
       username: "usernameTestJest",
       password: await bcrypt.hash("12345678", 10),
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
+  });
+
+  await prismaClient.user.create({
+    data: {
+      user_id: "id-test-2",
+      username: "usernameTestJest2",
+      password: await bcrypt.hash("12345678", 10),
+      email: "test-jest2@gmail.com",
       created_at: new Date(),
       updated_at: new Date(),
     },

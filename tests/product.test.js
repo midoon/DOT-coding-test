@@ -19,7 +19,7 @@ describe("POST /api/product/create", () => {
   it("should can create new prodcut", async () => {
     const logedUser = await supertest(app).post("/api/auth/login").send({
       password: "12345678",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     const access_token = logedUser.body.data.access_token;
@@ -41,7 +41,7 @@ describe("POST /api/product/create", () => {
   it("should reject create new prodcut if field null", async () => {
     const logedUser = await supertest(app).post("/api/auth/login").send({
       password: "12345678",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     const access_token = logedUser.body.data.access_token;
@@ -136,5 +136,41 @@ describe("GET /api/product/:product_id", () => {
     expect(result.body.status).toBe(false);
     expect(result.body.status_code).toBe(404);
     expect(result.body.message).toBe("Product not found");
+  });
+});
+
+//UPDATE PRODUCT
+describe("PUT /api/product/:product_id", () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestProduct();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("should can get product by id", async () => {
+    const logedUser = await supertest(app).post("/api/auth/login").send({
+      password: "12345678",
+      email: "test-jest@gmail.com",
+    });
+
+    const access_token = logedUser.body.data.access_token;
+
+    const result = await supertest(app)
+      .put("/api/product/id-product-test-1")
+      .send({
+        name: "testProduct",
+        price: "1000005",
+      })
+      .set("Authorization", `Bearer ${access_token}`);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.status_code).toBe(200);
+    expect(result.body.message).toBe("Success update product");
+    expect(result.body.data.name).toBe("testProduct");
+    expect(result.body.data.price).toBe("1000005");
   });
 });

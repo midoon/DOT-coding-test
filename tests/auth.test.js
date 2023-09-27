@@ -12,7 +12,7 @@ describe("POST /api/auth/register", () => {
     const result = await supertest(app).post("/api/auth/register").send({
       username: "usernameTestJest",
       password: "12345678",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     expect(result.status).toBe(201);
@@ -25,7 +25,7 @@ describe("POST /api/auth/register", () => {
     const result = await supertest(app).post("/api/auth/register").send({
       username: "usernameTestJest",
       password: "1234",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     expect(result.status).toBe(403);
@@ -51,13 +51,13 @@ describe("POST /api/auth/register", () => {
     await supertest(app).post("/api/auth/register").send({
       username: "usernameTestJest",
       password: "12345678",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     const result = await supertest(app).post("/api/auth/register").send({
       username: "usernameTestJest",
       password: "12345678",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     expect(result.status).toBe(409);
@@ -80,7 +80,7 @@ describe("POST /api/auth/login", () => {
   it("should can login with email and password", async () => {
     const result = await supertest(app).post("/api/auth/login").send({
       password: "12345678",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     expect(result.status).toBe(201);
@@ -154,7 +154,7 @@ describe("POST /api/auth/refresh", () => {
   it("should can get access token", async () => {
     const logedUser = await supertest(app).post("/api/auth/login").send({
       password: "12345678",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     const refresh_token = logedUser.body.data.refresh_token;
@@ -204,7 +204,7 @@ describe("POST /api/auth/logout", () => {
   it("should can logout", async () => {
     const logedUser = await supertest(app).post("/api/auth/login").send({
       password: "12345678",
-      email: "test@gmail.com",
+      email: "test-jest@gmail.com",
     });
 
     const access_token = logedUser.body.data.access_token;
