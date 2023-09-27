@@ -175,9 +175,9 @@ describe("POST /api/auth/refresh", () => {
       refresh_token: "token salah",
     });
 
-    expect(result.status).toBe(403);
+    expect(result.status).toBe(401);
     expect(result.body.status).toBe(false);
-    expect(result.body.status_code).toBe(403);
+    expect(result.body.status_code).toBe(401);
     expect(result.body.message).toBe("Unauthorized");
   });
 

@@ -17,9 +17,9 @@ const refresh = async (req, res) => {
       tokenDataReq.refresh_token
     );
     if (countToken !== 1) {
-      return res.status(403).send({
+      return res.status(401).send({
         status: false,
-        status_code: 403,
+        status_code: 401,
         message: "Unauthorized",
       });
     }
