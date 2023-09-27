@@ -1,6 +1,10 @@
 const supertest = require("supertest");
 const app = require("../src/application/web");
-const { removeTestUser, createTestUser } = require("./test-util");
+const {
+  removeTestUser,
+  createTestUser,
+  createTestProduct,
+} = require("./test-util");
 
 //CREATE PRODUCT
 describe("POST /api/product/create", () => {
@@ -79,5 +83,58 @@ describe("POST /api/product/create", () => {
     expect(result.body.status).toBe(false);
     expect(result.body.status_code).toBe(403);
     expect(result.body.message).toBe("Forbidden");
+  });
+});
+
+//GET ALL PRODUCT UNIT TETS
+describe("GET /api/product/", () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestProduct();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("should can get all product", async () => {
+    const result = await supertest(app).get("/api/product/");
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.status_code).toBe(200);
+    expect(result.body.message).toBe("Success get all product");
+    expect(result.body.data).toBeDefined();
+  });
+});
+
+//GET PRODUCT BY ID
+describe("GET /api/product/:product_id", () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestProduct();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("should can get product by id", async () => {
+    const result = await supertest(app).get("/api/product/id-product-test-1");
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.status_code).toBe(200);
+    expect(result.body.message).toBe("Success get product");
+    expect(result.body.data).toBeDefined();
+  });
+
+  it("should reject get product if product_id not found", async () => {
+    const result = await supertest(app).get("/api/product/id-product-test-x");
+
+    expect(result.status).toBe(404);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(404);
+    expect(result.body.message).toBe("Product not found");
   });
 });

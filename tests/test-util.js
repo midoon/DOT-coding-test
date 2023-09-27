@@ -25,7 +25,32 @@ const createTestUser = async () => {
   });
 };
 
+createTestProduct = async () => {
+  await prismaClient.product.create({
+    data: {
+      product_id: "id-product-test-1",
+      user_id: "id-test-1",
+      name: "name-test-1",
+      price: "10000",
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
+  });
+
+  await prismaClient.product.create({
+    data: {
+      product_id: "id-product-test-2",
+      user_id: "id-test-1",
+      name: "name-test-2",
+      price: "20000",
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
+  });
+};
+
 module.exports = {
   removeTestUser,
   createTestUser,
+  createTestProduct,
 };
