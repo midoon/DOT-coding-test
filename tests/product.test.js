@@ -150,7 +150,7 @@ describe("PUT /api/product/:product_id", () => {
     await removeTestUser();
   });
 
-  it("should can get product by id", async () => {
+  it("should can update product by id", async () => {
     const logedUser = await supertest(app).post("/api/auth/login").send({
       password: "12345678",
       email: "test-jest@gmail.com",
@@ -172,5 +172,56 @@ describe("PUT /api/product/:product_id", () => {
     expect(result.body.message).toBe("Success update product");
     expect(result.body.data.name).toBe("testProduct");
     expect(result.body.data.price).toBe("1000005");
+  });
+
+  it("should reject  update product by id if wrong token", async () => {
+    const result = await supertest(app)
+      .put("/api/product/id-product-test-1")
+      .send({
+        name: "testProduct",
+        price: "1000005",
+      })
+      .set("Authorization", `Bearer token salah`);
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Forbidden");
+  });
+
+  it("should reject  update product by id if without token", async () => {
+    const result = await supertest(app)
+      .put("/api/product/id-product-test-1")
+      .send({
+        name: "testProduct",
+        price: "1000005",
+      });
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Forbidden");
+  });
+
+  it("should reject update product by id if user is not have the product", async () => {
+    const logedUser = await supertest(app).post("/api/auth/login").send({
+      password: "12345678",
+      email: "test-jest2@gmail.com",
+    });
+
+    const access_token = logedUser.body.data.access_token;
+
+    const result = await supertest(app)
+      .put("/api/product/id-product-test-1")
+      .send({
+        name: "testProduct",
+        price: "1000005",
+      })
+      .set("Authorization", `Bearer ${access_token}`);
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Forbidden");
   });
 });
