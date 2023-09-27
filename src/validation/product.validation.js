@@ -9,4 +9,12 @@ const createProductValidation = (payload) => {
   return schema.validate(payload, { abortEarly: false });
 };
 
-module.exports = { createProductValidation };
+const updateProductValidation = (payload) => {
+  const schema = Joi.object({
+    name: Joi.string().optional(),
+    price: Joi.string().optional(),
+  });
+
+  return schema.validate(payload, { abortEarly: false });
+};
+module.exports = { createProductValidation, updateProductValidation };

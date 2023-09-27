@@ -10,6 +10,11 @@ productRouter.post(
   authMiddleware,
   productController.createProduct
 );
+productRouter.put(
+  "/api/product/:product_id",
+  authMiddleware,
+  productController.updateProduct
+);
 
 //public route
 productRouter.get("/api/product/", productController.getAllProduct);
