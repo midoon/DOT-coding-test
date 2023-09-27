@@ -140,3 +140,53 @@ describe("POST /api/auth/login", () => {
     expect(result.body.message).toBe("Wrong email or password");
   });
 });
+
+//REFRESH TOKEN TEST
+describe("POST /api/auth/refresh", () => {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("should can get access token", async () => {
+    const logedUser = await supertest(app).post("/api/auth/login").send({
+      password: "12345678",
+      email: "test@gmail.com",
+    });
+
+    const refresh_token = logedUser.body.data.refresh_token;
+
+    const result = await supertest(app).post("/api/auth/refresh").send({
+      refresh_token: refresh_token,
+    });
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.status_code).toBe(200);
+    expect(result.body.message).toBe("Success refresh token");
+    expect(result.body.data.access_token).toBeDefined();
+  });
+
+  it("should reject if refresh token wrong", async () => {
+    const result = await supertest(app).post("/api/auth/refresh").send({
+      refresh_token: "token salah",
+    });
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Unauthorized");
+  });
+
+  it("should reject if refresh token null", async () => {
+    const result = await supertest(app).post("/api/auth/refresh").send({});
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Validation error");
+  });
+});
