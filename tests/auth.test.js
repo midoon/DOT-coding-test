@@ -190,3 +190,52 @@ describe("POST /api/auth/refresh", () => {
     expect(result.body.message).toBe("Validation error");
   });
 });
+
+//LOGOUT UNIT TEST
+describe("POST /api/auth/logout", () => {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("should can logout", async () => {
+    const logedUser = await supertest(app).post("/api/auth/login").send({
+      password: "12345678",
+      email: "test@gmail.com",
+    });
+
+    const access_token = logedUser.body.data.access_token;
+
+    const result = await supertest(app)
+      .post("/api/auth/logout")
+      .set("Authorization", `Bearer ${access_token}`);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.status_code).toBe(200);
+    expect(result.body.message).toBe("Success logout");
+  });
+
+  it("should reject logout if without Authorization header", async () => {
+    const result = await supertest(app).post("/api/auth/logout");
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Forbidden");
+  });
+
+  it("should reject logout if wrong Authorization header", async () => {
+    const result = await supertest(app)
+      .post("/api/auth/logout")
+      .set("Authorization", `Bearer tokenSalah`);
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Forbidden");
+  });
+});
