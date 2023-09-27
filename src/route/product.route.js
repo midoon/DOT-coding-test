@@ -16,6 +16,12 @@ productRouter.put(
   productController.updateProduct
 );
 
+productRouter.delete(
+  "/api/product/:product_id",
+  authMiddleware,
+  productController.deleteProduct
+);
+
 //public route
 productRouter.get("/api/product/", productController.getAllProduct);
 productRouter.get("/api/product/:product_id", productController.getProductById);
