@@ -225,3 +225,91 @@ describe("PUT /api/product/:product_id", () => {
     expect(result.body.message).toBe("Forbidden");
   });
 });
+
+//DELETE PRODUCT
+describe("DELETE /api/product/:product_id", () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestProduct();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("should can delete product by id", async () => {
+    const logedUser = await supertest(app).post("/api/auth/login").send({
+      password: "12345678",
+      email: "test-jest@gmail.com",
+    });
+
+    const access_token = logedUser.body.data.access_token;
+
+    const result = await supertest(app)
+      .delete("/api/product/id-product-test-1")
+      .set("Authorization", `Bearer ${access_token}`);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.status_code).toBe(200);
+    expect(result.body.message).toBe("Success delete product");
+  });
+
+  it("should reject delete product by id if product id not found", async () => {
+    const logedUser = await supertest(app).post("/api/auth/login").send({
+      password: "12345678",
+      email: "test-jest@gmail.com",
+    });
+
+    const access_token = logedUser.body.data.access_token;
+
+    const result = await supertest(app)
+      .delete("/api/product/id-product-test-1-salah")
+      .set("Authorization", `Bearer ${access_token}`);
+
+    expect(result.status).toBe(404);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(404);
+    expect(result.body.message).toBe("Product not found");
+  });
+
+  it("should reject delete product by id if wrong token", async () => {
+    const result = await supertest(app)
+      .delete("/api/product/id-product-test-1")
+      .set("Authorization", `Bearer tokensalah`);
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Forbidden");
+  });
+
+  it("should reject delete product by id if without token", async () => {
+    const result = await supertest(app).delete(
+      "/api/product/id-product-test-1"
+    );
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Forbidden");
+  });
+
+  it("should reject delete product by id if user not have the product", async () => {
+    const logedUser = await supertest(app).post("/api/auth/login").send({
+      password: "12345678",
+      email: "test-jest2@gmail.com",
+    });
+
+    const access_token = logedUser.body.data.access_token;
+
+    const result = await supertest(app)
+      .delete("/api/product/id-product-test-1")
+      .set("Authorization", `Bearer ${access_token}`);
+
+    expect(result.status).toBe(403);
+    expect(result.body.status).toBe(false);
+    expect(result.body.status_code).toBe(403);
+    expect(result.body.message).toBe("Forbidden");
+  });
+});
